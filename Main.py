@@ -1,24 +1,29 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager
+import asyncio
+from pyppeteer import launch
 
 def main():
-    # Inizializza il driver di Chrome
-    service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service)
+    # Definizione della funzione asincrona principale
+    async def run():
+        # Avvia il browser
+        browser = await launch(headless=True)  # Usa headless=False per vedere il browser in azione
+        page = await browser.newPage()
+        
+        # Vai alla pagina desiderata
+        await page.goto('https://example.com')
+        
+        # Attendi che la pagina sia caricata completamente
+        await page.waitForSelector('body')
+        
+        # Estrai il testo del corpo della pagina
+        content = await page.evaluate('document.body.innerText')
+        print("Testo della pagina:\n")
+        print(content)
+        
+        # Chiudi il browser
+        await browser.close()
     
-    # Vai alla pagina desiderata
-    driver.get('https://example.com')
-    
-    # Trova l'elemento <body> e ottieni il suo testo
-    body = driver.find_element(By.TAG_NAME, 'body')
-    content = body.text
-    print("Testo della pagina:\n")
-    print(content)
-    
-    # Chiudi il browser
-    driver.quit()
+    # Esegui la funzione asincrona principale
+    asyncio.run(run())
 
 # Esegui il codice
 main()
