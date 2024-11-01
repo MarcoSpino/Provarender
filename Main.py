@@ -1,6 +1,12 @@
 import asyncio
 from pyppeteer import launch
 
+import subprocess
+def install():
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "colorama"])
+
+install()
+
 from colorama import init, Fore, Style
 import time
 import sys
