@@ -1,29 +1,79 @@
 import asyncio
 from pyppeteer import launch
 
-def main():
-    # Definizione della funzione asincrona principale
-    async def run():
-        # Avvia il browser
-        browser = await launch(headless=True)  # Usa headless=False per vedere il browser in azione
-        page = await browser.newPage()
-        
-        # Vai alla pagina desiderata
-        await page.goto('https://example.com')
-        
-        # Attendi che la pagina sia caricata completamente
-        await page.waitForSelector('body')
-        
-        # Estrai il testo del corpo della pagina
-        content = await page.evaluate('document.body.innerText')
-        print("Testo della pagina:\n")
-        print(content)
-        
-        # Chiudi il browser
-        await browser.close()
-    
-    # Esegui la funzione asincrona principale
-    asyncio.run(run())
+from colorama import init, Fore, Style
+import time
+import sys
+import os
 
-# Esegui il codice
-main()
+
+browser = launch(headless=True)
+page = browser.newPage()
+
+
+
+class MissonChiefBot:
+    def __init__(self):
+
+
+        self.hrefs = []
+        self.missionList = []
+        self.vehicleList = []
+        self.despatches = []
+        self.missionsSeen = []
+        self.buildingList = []
+        init()
+        logged_in = LogIn()
+        if logged_in:
+            self.edificiList()
+            self.veicoliList()
+            self.personale()
+            while True:
+                try:
+                    print(Fore.LIGHTBLUE_EX, "Aspetto 5 secondi")
+                    time.sleep(5)
+                except Exception as e:
+                    print(Fore.RED + "Oh no, an error occurred." + Style.RESET_ALL)
+                    print(e)
+                    print(Fore.RED + "Restarting bot...." + Style.RESET_ALL)
+        else:
+            print("Couldn't log in...")
+
+
+# OK NON TOCCARE
+def LogIn():
+    page.goto('https://www.operatore112.it/users/sign_in')
+    page.waitForSelector('user_email')
+    page.type('user_email', 'Marco01spino@gmail.com')
+    page.waitForSelector('user_password')
+    page.type('user_password', 'Gemelli@2001')
+    page.click('#submit-button-id')
+    try:
+        # check we are logged in- by grabbing a random tag only visible on log in.
+        alliance = page.querySelector('#alliance_li')
+        if alliance:
+            # Ottieni il valore dell'attributo 'class'
+            class_name = (alliance.getProperty('className')).jsonValue()
+        
+            # Controlla se la classe è uguale a "dropdown"
+            if class_name == "dropdown":
+                print("Logged in")
+                return True
+        else:
+            return False
+    except Exception as e:
+        return False
+
+def begin():
+    MissonChiefBot()
+
+
+if __name__ == '__main__':
+    try:
+        begin()
+    except KeyboardInterrupt:
+        print('Closing..')
+        try:
+            sys.exit(1)
+        except SystemExit:
+            os._exit(1)
