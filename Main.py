@@ -2,10 +2,12 @@ import asyncio
 from pyppeteer import launch
 
 async def main():
-	browser = await launch()
+        browser = await launch()
 	page = await browser.newPage()
 	await page.goto('https://example.com')
-	await page.screenshot({'path': 'example.png'})
+	print("Ciao")
 	await browser.close()
 
 asyncio.get_event_loop().run_until_complete(main())
+
+	
