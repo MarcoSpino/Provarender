@@ -32,6 +32,7 @@ async def LogIn():
     page.waitForSelector('user_password')
     page.type('user_password', 'Gemelli@2001')
     page.click('#submit-button-id')
+    print("Sono qui")
     try:
         # check we are logged in- by grabbing a random tag only visible on log in.
         alliance = page.querySelector('#alliance_li')
