@@ -14,15 +14,16 @@ import sys
 import os
 
 
-browser = launch(headless=True)
-page = browser.newPage()
 
+async def main():
+    global browser, page
+    browser = await launch(headless=True)
+    page = await browser.newPage()
 
+main()
 
 class MissonChiefBot:
     def __init__(self):
-
-
         self.hrefs = []
         self.missionList = []
         self.vehicleList = []
