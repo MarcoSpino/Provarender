@@ -51,18 +51,7 @@ class BrowserHandler:
         self.missionsSeen = []
         self.buildingList = []
         init()
-        logged_in = self.Login()
-        if logged_in:
-            while True:
-                try:
-                    print(Fore.LIGHTBLUE_EX, "Aspetto 5 secondi")
-                    time.sleep(5)
-                except Exception as e:
-                    print(Fore.RED + "Oh no, an error occurred." + Style.RESET_ALL)
-                    print(e)
-                    print(Fore.RED + "Restarting bot...." + Style.RESET_ALL)
-        else:
-            print("Couldn't log in...")
+        self.Login()
 
     async def initialize(self):
         # Inizializza il browser e la pagina
