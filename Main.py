@@ -78,7 +78,7 @@ async def main():
     await handler.initialize()
     
     await handler.fetch_content()
-    
+    await handler.Login()
     # Chiudi il browser
     await handler.close()
 
