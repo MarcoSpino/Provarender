@@ -1,3 +1,11 @@
+
+import subprocess
+import sys
+def install():
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "colorama"])
+
+install()
+
 from playwright.sync_api import sync_playwright
 import json
 import time
