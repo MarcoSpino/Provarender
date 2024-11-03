@@ -18,6 +18,42 @@ import asyncio
 from pyppeteer import launch
 
 class BrowserHandler:
+        
+    def __init__(self):
+        self.browser = None
+        self.page = None
+        
+        self.hrefs = []
+        self.missionList = []
+        self.vehicleList = []
+        self.despatches = []
+        self.missionsSeen = []
+        self.buildingList = []
+        init()
+        logged_in = False
+        print(logged_in)
+        logged_in = self.Login()
+        print(logged_in)
+        if logged_in:
+            while True:
+                try:
+                    print(Fore.LIGHTBLUE_EX, "Aspetto 5 secondi")
+                    time.sleep(5)
+                except Exception as e:
+                    print(Fore.RED + "Oh no, an error occurred." + Style.RESET_ALL)
+                    print(e)
+                    print(Fore.RED + "Restarting bot...." + Style.RESET_ALL)
+        else:
+            print("Couldn't log in...")
+
+
+
+    async def initialize(self):
+        # Inizializza il browser e la pagina
+        self.browser = await launch(headless=True)
+        self.page = await self.browser.newPage()
+
+        
 
     async def Login(self):
         print("Sono qui2")
@@ -39,35 +75,6 @@ class BrowserHandler:
                 return False
         except Exception as e:
             return False
-        
-    def __init__(self):
-        self.browser = None
-        self.page = None
-        
-        self.hrefs = []
-        self.missionList = []
-        self.vehicleList = []
-        self.despatches = []
-        self.missionsSeen = []
-        self.buildingList = []
-        init()
-        logged_in = self.Login()
-        if logged_in:
-            while True:
-                try:
-                    print(Fore.LIGHTBLUE_EX, "Aspetto 5 secondi")
-                    time.sleep(5)
-                except Exception as e:
-                    print(Fore.RED + "Oh no, an error occurred." + Style.RESET_ALL)
-                    print(e)
-                    print(Fore.RED + "Restarting bot...." + Style.RESET_ALL)
-        else:
-            print("Couldn't log in...")
-
-    async def initialize(self):
-        # Inizializza il browser e la pagina
-        self.browser = await launch(headless=True)
-        self.page = await self.browser.newPage()
     
 
 async def main():
@@ -79,8 +86,6 @@ async def main():
     
     await handler.fetch_content()
     await handler.Login()
-    # Chiudi il browser
-    await handler.close()
 
 
 
