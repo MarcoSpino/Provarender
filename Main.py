@@ -19,7 +19,7 @@ from pyppeteer import launch
 
 class BrowserHandler:
 
-    async def Login(self):
+    def Login(self):
         print("Sono qui2")
         self.page.goto('https://www.operatore112.it/users/sign_in')
         self.page.waitForSelector('user_email')
@@ -51,7 +51,18 @@ class BrowserHandler:
         self.missionsSeen = []
         self.buildingList = []
         init()
-        self.Login()
+        logged_in = self.Login()
+        if logged_in:
+            while True:
+                try:
+                    print(Fore.LIGHTBLUE_EX, "Aspetto 5 secondi")
+                    time.sleep(5)
+                except Exception as e:
+                    print(Fore.RED + "Oh no, an error occurred." + Style.RESET_ALL)
+                    print(e)
+                    print(Fore.RED + "Restarting bot...." + Style.RESET_ALL)
+        else:
+            print("Couldn't log in...")
 
     async def initialize(self):
         # Inizializza il browser e la pagina
