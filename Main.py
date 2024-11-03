@@ -20,25 +20,25 @@ from pyppeteer import launch
 class BrowserHandler:
 
     async def Login(self):
-            print("Sono qui2")
-            self.page.goto('https://www.operatore112.it/users/sign_in')
-            self.page.waitForSelector('user_email')
-            self.page.type('user_email', 'Marco01spino@gmail.com')
-            self.page.waitForSelector('user_password')
-            self.page.type('user_password', 'Gemelli@2001')
-            self.page.click('#submit-button-id')
-            print("Sono qui")
-            try:
-                alliance = self.page.querySelector('#alliance_li')
-                if alliance:
-                    class_name = (alliance.getProperty('className')).jsonValue()
-                    if class_name == "dropdown":
-                        print("Logged in")
-                        return True
-                else:
-                    return False
-            except Exception as e:
+        print("Sono qui2")
+        self.page.goto('https://www.operatore112.it/users/sign_in')
+        self.page.waitForSelector('user_email')
+        self.page.type('user_email', 'Marco01spino@gmail.com')
+        self.page.waitForSelector('user_password')
+        self.page.type('user_password', 'Gemelli@2001')
+        self.page.click('#submit-button-id')
+        print("Sono qui")
+        try:
+            alliance = self.page.querySelector('#alliance_li')
+            if alliance:
+                class_name = (alliance.getProperty('className')).jsonValue()
+                if class_name == "dropdown":
+                    print("Logged in")
+                    return True
+            else:
                 return False
+        except Exception as e:
+            return False
         
     def __init__(self):
         self.browser = None
