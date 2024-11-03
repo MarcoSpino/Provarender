@@ -14,61 +14,85 @@ import sys
 import os
 
 
+# Install Pyppeteer
+import subprocess
+import sys
+subprocess.check_call([sys.executable, "-m", "pip", "install", "pyppeteer"])
+
 import asyncio
 from pyppeteer import launch
+import json
+import time
 
-class AutoLogin:
-    def __init__(self, username, password, login_url):
-        self.username = username
-        self.password = password
-        self.login_url = login_url
+# Configuration
+username = "Marco01spino@gmail.com"
+password = "Gemelli@2001"
+BASE_URL = "https://www.operatore112.it/"
+
+class MissonChiefBot:
+    def __init__(self):
         self.browser = None
         self.page = None
 
-    async def start_browser(self):
-        """Avvia il browser e apre una nuova pagina."""
-        self.browser = await launch(headless=True)  # Imposta headless=False per vedere la finestra del browser
+    async def init_browser(self):
+        # Initialize the browser
+        self.browser = await launch(headless=True, args=['--no-sandbox'])
         self.page = await self.browser.newPage()
+        await self.page.setViewport({"width": 1920, "height": 1080})
 
-    async def navigate_to_login(self):
-        """Naviga all'URL di login."""
-        await self.page.goto(self.login_url)
+    async def login(self):
+        await self.page.goto("https://www.operatore112.it/users/sign_in")
+        await self.page.type("#user_email", username)
+        await self.page.type("#user_password", password)
+        await self.page.click('input[name="commit"]')
+        await self.page.waitForSelector("#alliance_li", {"timeout": 10000})
+        print("Logged in")
 
-    async def perform_login(self, username_selector, password_selector, submit_selector):
-        """Inserisce le credenziali e invia il form."""
-        await self.page.type(username_selector, self.username)  # Campo username
-        await self.page.type(password_selector, self.password)  # Campo password
-        await self.page.click(submit_selector)  # Pulsante di submit
-        await self.page.waitForNavigation()  # Attende che la pagina si carichi dopo il login
+    async def get_buildings(self):
+        await self.page.goto(BASE_URL + "leitstellenansicht")
+        building_links = await self.page.evaluate("""
+            () => Array.from(document.querySelectorAll("a[href*='buildings']"))
+            .map(el => el.href)
+        """)
+        print(f"{len(building_links)} edifici trovati")
+        # Process building data...
+    
+    async def get_vehicles(self):
+        await self.page.goto(BASE_URL + "vehicles")
+        vehicle_links = await self.page.evaluate("""
+            () => Array.from(document.querySelectorAll("a[href*='vehicles']"))
+            .map(el => el.href)
+        """)
+        print(f"{len(vehicle_links)} veicoli trovati")
+        # Process vehicle data...
 
-    async def main(self, username_selector, password_selector, submit_selector):
-        """Esegue le operazioni per il login."""
-        await self.start_browser()
-        await self.navigate_to_login()
-        await self.perform_login(username_selector, password_selector, submit_selector)
-        print("Login eseguito con successo!")
-        # Qui puoi aggiungere altre operazioni da eseguire dopo il login
+    async def fetch_missions(self):
+        await self.page.goto(BASE_URL)
+        mission_links = await self.page.evaluate("""
+            () => Array.from(document.querySelectorAll("#mission_list a:not(.map_position_mover)"))
+            .map(el => el.href)
+        """)
+        print(f"{len(mission_links)} missioni trovate")
+        # Process mission data...
 
-    async def close_browser(self):
-        """Chiude il browser."""
+    async def dispatch_missions(self):
+        # Example of how to navigate and dispatch missions
+        for mission_url in self.missionList:
+            await self.page.goto(mission_url)
+            # Find mission elements and execute required tasks
+
+    async def close(self):
         await self.browser.close()
 
-# Esempio di utilizzo
-async def execute_login():
-    # Credenziali e URL
-    username = 'Marco01spino@gmail.com'
-    password = 'Gemelli@2001'
-    login_url = 'https://www.operatore112.it/users/sign_in'
+async def main():
+    bot = MissonChiefBot()
+    await bot.init_browser()
+    await bot.login()
+    await bot.get_buildings()
+    await bot.get_vehicles()
+    await bot.fetch_missions()
+    await bot.dispatch_missions()
+    await bot.close()
 
-    # Selettori specifici del sito
-    username_selector = '#user_email'  # Cambia con il selettore effettivo
-    password_selector = '#user_password'  # Cambia con il selettore effettivo
-    submit_selector = '#commit'     # Cambia con il selettore effettivo
-
-    # Crea un'istanza di AutoLogin e avvia il processo di login
-    auto_login = AutoLogin(username, password, login_url)
-    await auto_login.main(username_selector, password_selector, submit_selector)
-    await auto_login.close_browser()
-
-# Esegue il codice asincrono
-asyncio.get_event_loop().run_until_complete(execute_login())
+# Run the bot
+asyncio.run(main())
