@@ -69,13 +69,10 @@ async def main():
     # Inizializza il browser e la pagina
     await handler.initialize()
     
-    await handler.fetch_content()
-    
     logged_in = False
     print(logged_in)
     logged_in = await handler.Login()
     print("RRRRRRRRRRRRRRRR", logged_in)
-
 
 
 # Esegui il codice asincrono
