@@ -32,13 +32,8 @@ class BrowserHandler:
         init()
         logged_in = self.Login()
         if logged_in:
-            self.edificiList()
-            self.veicoliList()
-            self.personale()
             while True:
                 try:
-                    self.buildMissionList()
-                    self.doMision()
                     print(Fore.LIGHTBLUE_EX, "Aspetto 5 secondi")
                     time.sleep(5)
                 except Exception as e:
