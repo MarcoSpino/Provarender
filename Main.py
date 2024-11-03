@@ -19,7 +19,7 @@ from pyppeteer import launch
 
 class BrowserHandler:
 
-    def Login(self):
+    async def Login(self):
         print("Sono qui2")
         self.page.goto('https://www.operatore112.it/users/sign_in')
         self.page.waitForSelector('user_email')
